@@ -60,9 +60,26 @@ article.c p{margin:0 0 8px}
 .grid>*{min-width:0}
 p.f{white-space:normal;overflow-wrap:anywhere}
 .route{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 36px}
-.route div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-.route b{display:block;color:var(--navy);margin-bottom:4px}
-.route span{color:var(--muted);font-size:.93rem}
+.route a{display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+.route a:hover{border-color:var(--blue);transform:translateY(-1px)}
+.route b{color:var(--navy)}
+.route span{color:var(--muted);font-size:.93rem;flex:1}
+.route em{font-style:normal;font-weight:600;color:var(--blue);font-size:.9rem;margin-top:4px}
+.route i,.nav i{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--orange-soft);color:var(--orange);font-style:normal;font-weight:800;font-size:.9rem;flex:0 0 auto}
+.route i{margin-bottom:4px}
+.nav{display:flex;gap:6px;flex-wrap:wrap}
+.nav a{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);text-decoration:none;font-size:.9rem;font-weight:500}
+.nav a:hover{border-color:var(--blue)}
+.nav a.on{border-color:var(--blue);background:var(--blue-soft)}
+.theme-switch{position:relative;width:62px;height:32px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;padding:0;flex:0 0 auto}
+.theme-switch .ic{position:absolute;top:7px;width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:1.8}
+.theme-switch .sun{left:7px}.theme-switch .moon{right:7px}
+.theme-switch .sun circle{fill:none}
+.theme-switch .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.theme-switch[aria-checked="true"] .knob{left:33px}
+.theme-switch[aria-checked="false"] .sun{stroke:#fff;z-index:1}
+.theme-switch[aria-checked="true"] .moon{stroke:#fff;z-index:1}
+.theme-switch:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;margin:10px 0 4px}
 .flow div{flex:1 1 120px;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-size:.88rem;text-align:center}
 .flow div.hl{background:var(--navy);color:#fff}
@@ -128,8 +145,7 @@ details.more{margin-top:10px}
 details.more summary{cursor:pointer;color:var(--muted);font-size:.9rem}
 @media (max-width:760px){.sim{grid-template-columns:1fr}.cmp-row{grid-template-columns:110px minmax(0,1fr) 54px}}
 footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.9rem}
-.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
-@media (max-width:560px){.toolbar{position:static}.chips{flex-wrap:nowrap;overflow-x:auto;max-width:100%}.chip{white-space:nowrap}.level-num{font-size:1.5rem}h2{font-size:1.25rem}.grid{grid-template-columns:1fr}}
+@media (max-width:560px){.toolbar{position:static}.toolbar .wrap{flex-wrap:nowrap;align-items:flex-start}.nav{flex-wrap:nowrap;overflow-x:auto;min-width:0;padding-bottom:4px}.nav a{white-space:nowrap}.level-num{font-size:1.5rem}h2{font-size:1.25rem}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -144,14 +160,18 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
 
 <div class="toolbar">
   <div class="wrap">
-    <nav class="chips" aria-label="Secciones">
-      <a class="chip" href="#datos">1 · Datos</a>
-      <a class="chip" href="#ciber">2 · Ciberseguridad</a>
-      <a class="chip" href="#metodo">3 · Método</a>
-      <a class="chip" href="#simulador">Simulador</a>
-      <a class="chip" href="#calculadora">Calculadora</a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#datos"><i>1</i>Fundamentos de datos</a>
+      <a href="#ciber"><i>2</i>Ciberseguridad</a>
+      <a href="#metodo"><i>3</i>El método</a>
+      <a href="#simulador"><i class="t">⇄</i>Simulador</a>
+      <a href="#calculadora"><i class="t">∑</i>Calculadora</a>
     </nav>
-    <button class="theme-btn" id="theme" type="button" aria-label="Cambiar tema claro u oscuro">Tema</button>
+    <button class="theme-switch" id="theme" type="button" role="switch" aria-checked="false" aria-label="Modo oscuro" title="Cambiar entre modo claro y oscuro">
+      <svg class="ic sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><g stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg>
+      <svg class="ic moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      <span class="knob"></span>
+    </button>
   </div>
 </div>
 
@@ -159,9 +179,9 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
 
   <section aria-label="Por dónde empezar">
     <div class="route">
-      <div><b>¿Nuevo en datos?</b><span>Empieza por el nivel 1: dataset, columna, CSV y valores faltantes. Luego salta a “Entropía de Shannon” y juega con el simulador.</span></div>
-      <div><b>¿Vienes de ciberseguridad?</b><span>Revisa el nivel 3: entropía normalizada, completitud, unicidad y el EIAC. Prueba la calculadora.</span></div>
-      <div><b>¿Investigador o docente?</b><span>Ve directo a EIAC, sensibilidad, CVM y “Cómo leer las gráficas”. El código está en el repositorio.</span></div>
+      <a href="#datos"><i>1</i><b>¿Nuevo en datos?</b><span>Empieza por el nivel 1, Fundamentos de datos: dataset, columna, CSV y valores faltantes. Luego pasa al nivel 3 y juega con el simulador.</span><em>Ir al nivel 1 →</em></a>
+      <a href="#metodo"><i>3</i><b>¿Vienes de ciberseguridad?</b><span>Ve al nivel 3, El método: entropía normalizada, completitud, unicidad y el EIAC. Luego prueba la calculadora.</span><em>Ir al nivel 3 →</em></a>
+      <a href="#eiac"><i class="t">∑</i><b>¿Investigador o docente?</b><span>Ve directo al EIAC, la sensibilidad, el modelo CVM y “Cómo leer las gráficas”. El código está en el repositorio.</span><em>Ir al EIAC →</em></a>
     </div>
   </section>
 
@@ -385,7 +405,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <div class="ex">Un ID tiene U = 1 → el factor <span class="f">1 − U</span> vale 0 y anula el índice.</div>
       </article>
 
-      <article class="c wide" data-k="eiac indice de entropia informativa ajustada de columna formula relevancia">
+      <article class="c wide" id="eiac" data-k="eiac indice de entropia informativa ajustada de columna formula relevancia">
         <h3>EIAC · Índice de Entropía Informativa Ajustada de Columna</h3>
         <p>Nuestra propuesta. Parte de Shannon y la corrige con los dos factores que ella no ve: vacíos y unicidad.</p>
         <p class="f" style="font-size:1.25rem">EIAC(X) = Hn(X) × C(X) × (1 − U(X))</p>
@@ -544,12 +564,21 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
   // Tema claro/oscuro
   var root=document.documentElement, btn=document.getElementById('theme');
   try{var t=localStorage.getItem('eiac-theme'); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  var isDark=function(){var cur=root.getAttribute('data-theme'); return cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;};
+  var sync=function(){btn.setAttribute('aria-checked',isDark()?'true':'false');};
+  sync();
   btn.addEventListener('click',function(){
-    var cur=root.getAttribute('data-theme');
-    var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var next=dark?'light':'dark'; root.setAttribute('data-theme',next);
+    var next=isDark()?'light':'dark'; root.setAttribute('data-theme',next); sync();
     try{localStorage.setItem('eiac-theme',next);}catch(e){}
   });
+  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',sync);}catch(e){}
+  // Sección activa en el menú
+  var links=[].slice.call(document.querySelectorAll('.nav a'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){
+      links.forEach(function(l){l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id);});}});},{rootMargin:'-30% 0px -60% 0px'});
+    links.forEach(function(l){var t=document.querySelector(l.getAttribute('href')); if(t) io.observe(t);});
+  }
 
   var fmt=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:3,maximumFractionDigits:3});};
   var fmt2=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2});};
