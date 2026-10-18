@@ -36,8 +36,7 @@ h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.2;margin:0 0 12px}
 .hero p{max-width:760px;margin:0 0 6px;opacity:.92}
 .hero .authors{font-size:.9rem;opacity:.8;margin-top:14px}
 .toolbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
-.toolbar .wrap{display:flex;gap:10px;align-items:center;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
-.toolbar input{flex:1 1 220px;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font-size:1rem}
+.toolbar .wrap{display:flex;gap:10px;align-items:center;justify-content:space-between;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
 .chips{display:flex;gap:6px;flex-wrap:wrap}
 .chip{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:7px 12px;border-radius:999px;font-size:.88rem;cursor:pointer;text-decoration:none}
 .chip:hover{border-color:var(--blue)}
@@ -94,7 +93,40 @@ th{color:var(--muted);font-weight:600}
 .bars span em{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:.7rem;color:var(--muted);font-style:normal;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .barwrap{padding-bottom:22px}
 .hidden{display:none!important}
-.empty{color:var(--muted);display:none}
+
+/* simulador */
+.sim{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.sl{margin:0 0 18px}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sl-top b{font-size:1rem}
+.sl-top output{font-weight:700;font-variant-numeric:tabular-nums;font-size:1.15rem;color:var(--navy)}
+.sl small{display:block;color:var(--muted);font-size:.85rem;margin-bottom:4px}
+input[type=range]{width:100%;accent-color:var(--blue);height:28px;cursor:pointer}
+.sl.o input[type=range]{accent-color:var(--orange)}
+.eq{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:1.05rem;background:var(--surface-2);border-radius:10px;padding:10px 12px;margin:0 0 14px;overflow-wrap:anywhere}
+.eiac-big{font-size:3rem;font-weight:800;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.lvl{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:999px;color:#fff;font-weight:600;font-size:.9rem;vertical-align:middle}
+.meter{position:relative;height:16px;border-radius:999px;overflow:hidden;display:flex;margin:14px 0 4px}
+.meter i{flex:0 0 33%;}
+.meter i:nth-child(2){flex-basis:33%}
+.meter i:nth-child(3){flex:1}
+.pin{position:absolute;top:-4px;width:4px;height:24px;background:var(--text);border-radius:2px;transform:translateX(-2px);transition:left .15s}
+.meter-wrap{position:relative}
+.meter-lbl{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.why{margin:14px 0 0;padding:10px 12px;border-radius:10px;background:var(--orange-soft);font-size:.95rem}
+/* contraste Hn vs EIAC */
+.cmp{margin:6px 0 4px}
+.cmp-row{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:10px;align-items:center;margin:8px 0}
+.cmp-row span{font-size:.9rem}
+.track{background:var(--surface-2);border-radius:8px;height:22px;overflow:hidden}
+.fill{height:100%;border-radius:8px;transition:width .2s}
+.fill.hn{background:#9aa7b5}
+.fill.ei{background:var(--blue)}
+.cmp-row strong{text-align:right;font-variant-numeric:tabular-nums}
+.loss{font-size:.95rem;margin:6px 0 14px}
+details.more{margin-top:10px}
+details.more summary{cursor:pointer;color:var(--muted);font-size:.9rem}
+@media (max-width:760px){.sim{grid-template-columns:1fr}.cmp-row{grid-template-columns:110px minmax(0,1fr) 54px}}
 footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.9rem}
 .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
 @media (max-width:560px){.toolbar{position:static}.chips{flex-wrap:nowrap;overflow-x:auto;max-width:100%}.chip{white-space:nowrap}.level-num{font-size:1.5rem}h2{font-size:1.25rem}.grid{grid-template-columns:1fr}}
@@ -112,11 +144,11 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
 
 <div class="toolbar">
   <div class="wrap">
-    <input id="q" type="search" placeholder="Buscar un concepto (ej. entropía, CSV, CAPEC)…" aria-label="Buscar concepto">
     <nav class="chips" aria-label="Secciones">
       <a class="chip" href="#datos">1 · Datos</a>
       <a class="chip" href="#ciber">2 · Ciberseguridad</a>
       <a class="chip" href="#metodo">3 · Método</a>
+      <a class="chip" href="#simulador">Simulador</a>
       <a class="chip" href="#calculadora">Calculadora</a>
     </nav>
     <button class="theme-btn" id="theme" type="button" aria-label="Cambiar tema claro u oscuro">Tema</button>
@@ -127,7 +159,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
 
   <section aria-label="Por dónde empezar">
     <div class="route">
-      <div><b>¿Nuevo en datos?</b><span>Empieza por el nivel 1: dataset, columna, CSV y valores faltantes. Luego salta a “Entropía de Shannon”.</span></div>
+      <div><b>¿Nuevo en datos?</b><span>Empieza por el nivel 1: dataset, columna, CSV y valores faltantes. Luego salta a “Entropía de Shannon” y juega con el simulador.</span></div>
       <div><b>¿Vienes de ciberseguridad?</b><span>Revisa el nivel 3: entropía normalizada, completitud, unicidad y el EIAC. Prueba la calculadora.</span></div>
       <div><b>¿Investigador o docente?</b><span>Ve directo a EIAC, sensibilidad, CVM y “Cómo leer las gráficas”. El código está en el repositorio.</span></div>
     </div>
@@ -363,7 +395,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
           <div style="background:#2e75b6">Alta · 0,66 a 1</div>
         </div>
         <div class="ex" style="margin-top:12px"><b>Ejemplo real (6 patrones, sin vacíos):</b> <code>Abstraction</code> → Hn 0,918 × C 1 × (1 − 2/6) = <b>0,612</b> (media). <code>ID</code> → Hn 1 × C 1 × (1 − 6/6) = <b>0</b>: Shannon lo ve como la columna más informativa; el EIAC lo reconoce como identificador.</div>
-        <span class="tag">Láminas 10–12</span> <a href="#calculadora">Pruébalo en la calculadora ↓</a>
+        <span class="tag">Láminas 10–12</span> <a href="#simulador">Mueve cada factor en el simulador ↓</a>
       </article>
 
       <article class="c" data-k="clasificacion funcional analitica trazabilidad descriptiva complementaria limpieza">
@@ -413,13 +445,58 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <span class="tag o">Lámina 19</span>
       </article>
     </div>
-    <p class="empty" id="empty">No encontramos ese término. Prueba con otra palabra.</p>
+  </section>
+
+  <!-- ===================== SIMULADOR ===================== -->
+  <section class="level" id="simulador">
+    <div class="level-head"><span class="level-num">⇄</span><h2>Simulador: ¿cómo se comporta cada métrica?</h2></div>
+    <p class="level-intro">Mueve cada barra y observa cómo cambia el EIAC. Así se ve por qué una columna con mucha diversidad puede ser poco útil: basta con que tenga muchos vacíos o que casi todos sus valores sean distintos.</p>
+    <div class="sim">
+      <div>
+        <div class="sl">
+          <div class="sl-top"><b>Hn · diversidad</b><output id="o-hn">0,800</output></div>
+          <small>0 = un valor domina · 1 = valores repartidos por igual</small>
+          <input type="range" id="s-hn" min="0" max="1" step="0.001" value="0.80" aria-label="Entropía normalizada Hn">
+        </div>
+        <div class="sl">
+          <div class="sl-top"><b>C · completitud</b><output id="o-c">0,900</output></div>
+          <small>0 = columna vacía · 1 = sin datos faltantes</small>
+          <input type="range" id="s-c" min="0" max="1" step="0.001" value="0.90" aria-label="Completitud C">
+        </div>
+        <div class="sl o">
+          <div class="sl-top"><b>U · unicidad</b><output id="o-u">0,100</output></div>
+          <small>0 = valores que se repiten · 1 = cada fila distinta (un ID)</small>
+          <input type="range" id="s-u" min="0" max="1" step="0.001" value="0.10" aria-label="Unicidad U">
+        </div>
+        <div class="presets" style="margin-bottom:0">
+          <button class="chip" data-s="0.80,0.90,0.10">Referencia (Tabla 5.5)</button>
+          <button class="chip" data-s="1,1,1">Identificador</button>
+          <button class="chip" data-s="0.996,0.048,0.05">Casi vacía (Sparse_Field)</button>
+          <button class="chip" data-s="0.991,1,0.814">timestamp</button>
+          <button class="chip" data-s="0.991,1,0">Etiqueta “Normal”</button>
+        </div>
+      </div>
+      <div>
+        <p class="eq" id="sim-eq">EIAC = 0,80 × 0,90 × (1 − 0,10)</p>
+        <div><span class="eiac-big" id="sim-e">0,648</span><span class="lvl" id="sim-l">Media</span></div>
+        <div class="meter-wrap">
+          <div class="meter"><i style="background:#c65a1e"></i><i style="background:#8a97a6"></i><i style="background:#2e75b6"></i></div>
+          <div class="pin" id="sim-pin" style="left:64.8%"></div>
+        </div>
+        <div class="meter-lbl"><span>0</span><span>0,33</span><span>0,66</span><span>1</span></div>
+        <div class="cmp">
+          <div class="cmp-row"><span>Shannon norm. (Hn)</span><div class="track"><div class="fill hn" id="sim-bh"></div></div><strong id="sim-vh">0,800</strong></div>
+          <div class="cmp-row"><span>EIAC</span><div class="track"><div class="fill ei" id="sim-be"></div></div><strong id="sim-ve">0,648</strong></div>
+        </div>
+        <p class="why" id="sim-why"></p>
+      </div>
+    </div>
   </section>
 
   <!-- ===================== CALCULADORA ===================== -->
   <section class="level" id="calculadora">
     <div class="level-head"><span class="level-num">∑</span><h2>Calculadora de EIAC</h2></div>
-    <p class="level-intro">Escribe los valores de una columna separados por comas o saltos de línea. Deja un valor vacío (dos comas seguidas) para simular un dato faltante.</p>
+    <p class="level-intro">Ahora con datos: escribe los valores de una columna separados por comas o saltos de línea (deja un valor vacío, dos comas seguidas, para simular un dato faltante) y compara lo que dice Shannon con lo que dice el EIAC.</p>
     <div class="calc">
       <label for="vals" class="hidden">Valores de la columna</label>
       <textarea id="vals" spellcheck="false">Detailed, Standard, Detailed, Detailed, Standard, Detailed</textarea>
@@ -430,7 +507,15 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <button class="chip" data-p="High, Medium, Low, High, Medium, Low, High, Medium">Equilibrada</button>
         <button class="chip" data-p="High, , , Low, , , High, , , ">Con muchos vacíos</button>
       </div>
-      <div class="res">
+      <div class="cmp">
+        <div class="cmp-row"><span>Shannon norm. (Hn)</span><div class="track"><div class="fill hn" id="c-bh"></div></div><strong id="c-vh">–</strong></div>
+        <div class="cmp-row"><span>EIAC</span><div class="track"><div class="fill ei" id="c-be"></div></div><strong id="c-ve">–</strong></div>
+      </div>
+      <p class="loss" id="loss"></p>
+      <p class="verdict" id="verdict" style="margin-top:0"></p>
+      <div class="barwrap"><div class="bars" id="bars" aria-label="Frecuencia de cada valor"></div></div>
+      <details class="more"><summary>Ver el cálculo paso a paso</summary>
+      <div class="res" style="margin-top:12px">
         <div><small>Registros (n)</small><strong id="r-n">–</strong></div>
         <div><small>Vacíos (m)</small><strong id="r-m">–</strong></div>
         <div><small>Distintos (k)</small><strong id="r-k">–</strong></div>
@@ -440,8 +525,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <div><small>1 − U</small><strong id="r-u">–</strong></div>
         <div class="big"><small>EIAC</small><strong id="r-e">–</strong></div>
       </div>
-      <p class="verdict" id="verdict"></p>
-      <div class="barwrap"><div class="bars" id="bars" aria-label="Frecuencia de cada valor"></div></div>
+      </details>
     </div>
   </section>
 
@@ -467,22 +551,43 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
     try{localStorage.setItem('eiac-theme',next);}catch(e){}
   });
 
-  // Búsqueda
-  var norm=function(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');};
-  var cards=[].slice.call(document.querySelectorAll('article.c'));
-  var empty=document.getElementById('empty');
-  document.getElementById('q').addEventListener('input',function(e){
-    var q=norm(e.target.value.trim()), shown=0;
-    cards.forEach(function(c){
-      var hit=!q || norm(c.getAttribute('data-k')+' '+c.textContent).indexOf(q)>-1;
-      c.classList.toggle('hidden',!hit); if(hit) shown++;
-    });
-    empty.style.display = shown?'none':'block';
+  var fmt=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:3,maximumFractionDigits:3});};
+  var fmt2=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2});};
+  var level=function(E){return E>=0.66?['Alta','#2e75b6']:(E>=0.33?['Media','#8a97a6']:['Baja','#c65a1e']);};
+  function lossText(Hn,C,U,E){
+    var d=Hn-E;
+    if(Hn<=0) return 'Shannon ya es 0: la columna no tiene diversidad (un solo valor o vacía).';
+    if(d<0.005) return '<b>Sin ajuste:</b> el EIAC coincide con Shannon; la columna está completa y sus valores se repiten.';
+    var pv=Hn*(1-C), pu=Hn*C*U;
+    var cause = Math.abs(pu-pv) < 0.25*Math.max(pu,pv) ? 'una combinación de <b>vacíos</b> y <b>unicidad</b>' : (pu>pv ? 'la <b>unicidad</b> (muchos valores distintos)' : 'la <b>baja completitud</b> (muchos vacíos)');
+    return 'El EIAC le quita <b>'+fmt(d)+'</b> a Shannon ('+Math.round(d/Hn*100)+' %). La caída se explica sobre todo por '+cause+'.';
+  }
+  // Simulador
+  var sh=document.getElementById('s-hn'), sc=document.getElementById('s-c'), su=document.getElementById('s-u');
+  function sim(){
+    var Hn=+sh.value, C=+sc.value, U=+su.value, E=Hn*C*(1-U), L=level(E);
+    var set=function(id,v){document.getElementById(id).textContent=v;};
+    set('o-hn',fmt(Hn)); set('o-c',fmt(C)); set('o-u',fmt(U));
+    set('sim-eq','EIAC = '+fmt(Hn)+' × '+fmt(C)+' × (1 − '+fmt(U)+')');
+    set('sim-e',fmt(E)); var l=document.getElementById('sim-l'); l.textContent=L[0]; l.style.background=L[1];
+    document.getElementById('sim-pin').style.left=(E*100)+'%';
+    document.getElementById('sim-bh').style.width=(Hn*100)+'%';
+    document.getElementById('sim-be').style.width=(E*100)+'%';
+    set('sim-vh',fmt(Hn)); set('sim-ve',fmt(E));
+    var why;
+    if(U>=0.99) why='Con U = 1 el factor (1 − U) vale 0 y el índice se anula: es un identificador, aunque Shannon le dé el máximo.';
+    else if(Hn<0.01) why='Sin diversidad no hay información: el índice es 0 sin importar lo demás.';
+    else why=lossText(Hn,C,U,E);
+    document.getElementById('sim-why').innerHTML=why;
+  }
+  [sh,sc,su].forEach(function(x){x.addEventListener('input',sim);});
+  [].forEach.call(document.querySelectorAll('[data-s]'),function(b){
+    b.addEventListener('click',function(){var v=b.getAttribute('data-s').split(',');sh.value=v[0];sc.value=v[1];su.value=v[2];sim();});
   });
+  sim();
 
   // Calculadora EIAC
   var ta=document.getElementById('vals');
-  var fmt=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:3,maximumFractionDigits:3});};
   function calc(){
     var raw=ta.value.split(/[,\n;]/);
     if(raw.length && raw[raw.length-1].trim()==='' && ta.value.trim().slice(-1)!==',') raw.pop();
@@ -503,6 +608,10 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
     else if(C<0.5) why=' Más de la mitad de las celdas está vacía.';
     else if(Hn<0.3 && k>0) why=' Un valor domina casi toda la columna.';
     document.getElementById('verdict').textContent='Relevancia '+lvl+'.'+why;
+    document.getElementById('c-bh').style.width=(Hn*100)+'%';
+    document.getElementById('c-be').style.width=(E*100)+'%';
+    set('c-vh',fmt(Hn)); set('c-ve',fmt(E));
+    document.getElementById('loss').innerHTML=lossText(Hn,C,U,E);
     var bars=document.getElementById('bars'); bars.innerHTML='';
     var max=Math.max.apply(null,keys.map(function(x){return freq[x];}).concat([1]));
     keys.slice(0,24).forEach(function(key){
