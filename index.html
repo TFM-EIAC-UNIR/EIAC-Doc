@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EIAC · Conceptos clave</title>
+<meta name="description" content="Glosario y guía de conceptos para entender la investigación EIAC: datasets, CAPEC, entropía de Shannon y el índice EIAC, explicados para cualquier nivel.">
+<style>
+:root{
+  --bg:#f6f8fb; --surface:#ffffff; --surface-2:#eef3f9; --text:#1d2430; --muted:#5c6675;
+  --line:#dbe2ea; --navy:#1b3a6b; --blue:#2e75b6; --blue-soft:#dce9f6; --orange:#c96a17; --orange-soft:#fbebdb;
+  --green:#3f7a32; --code:#1e242e; --code-text:#e6edf3; --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 14px rgba(16,24,40,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f141b; --surface:#171e27; --surface-2:#1d2631; --text:#e7ecf2; --muted:#9aa6b4;
+    --line:#2a3542; --navy:#9cc3ef; --blue:#6aa9e6; --blue-soft:#1d3047; --orange:#f0a35b; --orange-soft:#3a2a1a;
+    --green:#8cc47d; --code:#0b0f14; --code-text:#e6edf3; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --surface:#171e27; --surface-2:#1d2631; --text:#e7ecf2; --muted:#9aa6b4;
+  --line:#2a3542; --navy:#9cc3ef; --blue:#6aa9e6; --blue-soft:#1d3047; --orange:#f0a35b; --orange-soft:#3a2a1a;
+  --green:#8cc47d; --code:#0b0f14; --code-text:#e6edf3; --shadow:none;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--blue)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--navy);color:#fff;padding:40px 0 32px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) header.hero{background:#132640}}
+:root[data-theme="dark"] header.hero{background:#132640}
+.kicker{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin:0 0 8px}
+h1{font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.2;margin:0 0 12px}
+.hero p{max-width:760px;margin:0 0 6px;opacity:.92}
+.hero .authors{font-size:.9rem;opacity:.8;margin-top:14px}
+.toolbar{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.toolbar .wrap{display:flex;gap:10px;align-items:center;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+.toolbar input{flex:1 1 220px;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font-size:1rem}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:7px 12px;border-radius:999px;font-size:.88rem;cursor:pointer;text-decoration:none}
+.chip:hover{border-color:var(--blue)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+main{padding:32px 16px 60px}
+section.level{margin:0 0 44px}
+.level-head{display:flex;gap:14px;align-items:baseline;margin:0 0 6px}
+.level-num{font-weight:800;font-size:2rem;color:var(--orange)}
+h2{font-size:1.5rem;margin:0;color:var(--navy)}
+.level-intro{color:var(--muted);margin:0 0 18px;max-width:780px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+article.c{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+article.c h3{margin:0 0 6px;font-size:1.08rem;color:var(--text)}
+article.c p{margin:0 0 8px}
+.ex{background:var(--surface-2);border-radius:10px;padding:8px 12px;font-size:.93rem;margin:8px 0}
+.ex b{color:var(--navy)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:2px 8px;border-radius:999px;margin-right:4px}
+.tag.o{color:var(--orange);background:var(--orange-soft)}
+.f{font-family:"Cambria Math",Cambria,Georgia,serif;font-size:1.05rem;white-space:nowrap}
+.wide{grid-column:1/-1}
+.grid>*{min-width:0}
+p.f{white-space:normal;overflow-wrap:anywhere}
+.route{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:0 0 36px}
+.route div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.route b{display:block;color:var(--navy);margin-bottom:4px}
+.route span{color:var(--muted);font-size:.93rem}
+.flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;margin:10px 0 4px}
+.flow div{flex:1 1 120px;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-size:.88rem;text-align:center}
+.flow div.hl{background:var(--navy);color:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .flow div.hl{background:#2e5b93}}
+:root[data-theme="dark"] .flow div.hl{background:#2e5b93}
+.flow i{align-self:center;color:var(--muted);font-style:normal}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+th{color:var(--muted);font-weight:600}
+.tbl{overflow-x:auto}
+.scale{display:flex;border-radius:10px;overflow:hidden;font-size:.85rem;margin-top:8px}
+.scale div{flex:1;padding:6px 8px;color:#fff;text-align:center}
+/* calculator */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.calc textarea{width:100%;min-height:90px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--text);font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 16px}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.res div{background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.res small{display:block;color:var(--muted);font-size:.8rem}
+.res strong{font-size:1.4rem;font-variant-numeric:tabular-nums}
+.res .big{background:var(--navy);color:#fff}
+.res .big small{color:#cfe0f5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .res .big{background:#2e5b93}}
+:root[data-theme="dark"] .res .big{background:#2e5b93}
+.verdict{margin-top:12px;font-weight:600}
+.bars{display:flex;gap:4px;align-items:flex-end;height:70px;margin-top:12px}
+.bars span{flex:1;background:var(--blue);border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.bars span em{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:.7rem;color:var(--muted);font-style:normal;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.barwrap{padding-bottom:22px}
+.hidden{display:none!important}
+.empty{color:var(--muted);display:none}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.9rem}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
+@media (max-width:560px){.toolbar{position:static}.chips{flex-wrap:nowrap;overflow-x:auto;max-width:100%}.chip{white-space:nowrap}.level-num{font-size:1.5rem}h2{font-size:1.25rem}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">12ª Semana Internacional de Ciencia, Tecnología e Innovación · UFPS</p>
+    <h1>Conceptos para entender la investigación EIAC</h1>
+    <p>Esta guía acompaña la ponencia <em>“Evaluación de la relevancia informativa de características en datasets basados en CAPEC mediante entropía de columnas”</em>. Explica, sin dar nada por sabido, cada término que usamos: desde qué es un dataset hasta cómo se calcula nuestro índice.</p>
+    <p class="authors">Marco Antonio Adarme Jaimes · Ronald Eduardo Benítez Mejía · Jorge Kevin Hernández Lasso — Director: Rafael Martínez Ranera · Máster en Visual Analytics &amp; Big Data, UNIR</p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <input id="q" type="search" placeholder="Buscar un concepto (ej. entropía, CSV, CAPEC)…" aria-label="Buscar concepto">
+    <nav class="chips" aria-label="Secciones">
+      <a class="chip" href="#datos">1 · Datos</a>
+      <a class="chip" href="#ciber">2 · Ciberseguridad</a>
+      <a class="chip" href="#metodo">3 · Método</a>
+      <a class="chip" href="#calculadora">Calculadora</a>
+    </nav>
+    <button class="theme-btn" id="theme" type="button" aria-label="Cambiar tema claro u oscuro">Tema</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section aria-label="Por dónde empezar">
+    <div class="route">
+      <div><b>¿Nuevo en datos?</b><span>Empieza por el nivel 1: dataset, columna, CSV y valores faltantes. Luego salta a “Entropía de Shannon”.</span></div>
+      <div><b>¿Vienes de ciberseguridad?</b><span>Revisa el nivel 3: entropía normalizada, completitud, unicidad y el EIAC. Prueba la calculadora.</span></div>
+      <div><b>¿Investigador o docente?</b><span>Ve directo a EIAC, sensibilidad, CVM y “Cómo leer las gráficas”. El código está en el repositorio.</span></div>
+    </div>
+  </section>
+
+  <!-- ===================== NIVEL 1 ===================== -->
+  <section class="level" id="datos">
+    <div class="level-head"><span class="level-num">1</span><h2>Fundamentos de datos</h2></div>
+    <p class="level-intro">Lo mínimo para entender con qué trabajamos: tablas de datos y cómo se preparan antes de usarlas.</p>
+    <div class="grid">
+
+      <article class="c" data-k="dato informacion">
+        <h3>Dato e información</h3>
+        <p>Un <b>dato</b> es un valor suelto (un número, una palabra, una fecha). Se vuelve <b>información</b> cuando ayuda a responder una pregunta o a tomar una decisión.</p>
+        <div class="ex"><b>Ejemplo:</b> “High” es un dato; “este ataque tiene severidad alta” ya es información.</div>
+      </article>
+
+      <article class="c" data-k="dataset conjunto de datos tabla">
+        <h3>Dataset (conjunto de datos)</h3>
+        <p>Una colección organizada de datos, casi siempre en forma de <b>tabla</b>: cada fila es un caso y cada columna, una propiedad de ese caso.</p>
+        <div class="ex"><b>En el proyecto:</b> el catálogo CAPEC convertido en tabla tiene 615 filas (patrones de ataque) y 23 columnas.</div>
+        <span class="tag">Láminas 7–9</span>
+      </article>
+
+      <article class="c" data-k="registro fila observacion instancia">
+        <h3>Registro (fila)</h3>
+        <p>Cada fila del dataset: un elemento concreto que se describe. También se llama observación o instancia.</p>
+        <div class="ex"><b>Ejemplo:</b> una fila es el patrón CAPEC-66 “SQL Injection” con su nivel, estado y severidad.</div>
+      </article>
+
+      <article class="c" data-k="columna caracteristica atributo variable feature">
+        <h3>Columna, característica o atributo</h3>
+        <p>Cada columna describe una misma propiedad para todos los registros. En machine learning se le llama <b>característica</b> (<i>feature</i>). Nuestra pregunta es justamente <b>cuánta información aporta cada columna</b>.</p>
+        <div class="ex"><b>Ejemplo:</b> <code>Typical Severity</code> es una columna con valores High, Medium, Low…</div>
+      </article>
+
+      <article class="c" data-k="tipos de variables numerica categorica texto fecha timestamp">
+        <h3>Tipos de columnas</h3>
+        <p><b>Numérica</b> (puertos, cantidades), <b>categórica</b> (pocas opciones que se repiten: High/Medium/Low), <b>texto libre</b> (descripciones) y <b>fecha/hora</b> (<i>timestamp</i>). El tipo influye mucho en cuánta información “útil” tiene una columna.</p>
+      </article>
+
+      <article class="c" data-k="csv archivo separado por comas">
+        <h3>CSV</h3>
+        <p>Formato de texto para guardar tablas: una línea por fila y los valores separados por comas. Lo abre Excel, Python o casi cualquier herramienta. Nuestro algoritmo recibe un CSV, local o desde una URL.</p>
+        <div class="ex"><code>ID,Name,Abstraction<br>66,SQL Injection,Standard</code></div>
+      </article>
+
+      <article class="c" data-k="xml formato jerarquico elementtree">
+        <h3>XML</h3>
+        <p>Formato de texto con etiquetas anidadas, como “cajas dentro de cajas”. CAPEC se publica en XML; lo convertimos a tabla con la librería ElementTree de Python.</p>
+      </article>
+
+      <article class="c wide" data-k="flujo de datos pipeline etl proceso">
+        <h3>Flujo de datos (pipeline)</h3>
+        <p>La ruta que siguen los datos desde su origen hasta que se usan. Nuestro trabajo actúa <b>antes del modelo</b>, para revisar la calidad de las columnas.</p>
+        <div class="flow" role="img" aria-label="Fuente, conversión a tabla, CSV, evaluación EIAC, análisis o modelo">
+          <div>Fuente<br><small>XML de CAPEC, tráfico HTTP</small></div><i>→</i>
+          <div>Conversión<br><small>a tabla</small></div><i>→</i>
+          <div>CSV<br><small>dataset</small></div><i>→</i>
+          <div class="hl">Evaluación EIAC<br><small>¿qué columnas aportan?</small></div><i>→</i>
+          <div>Análisis o modelo<br><small>con mejores columnas</small></div>
+        </div>
+      </article>
+
+      <article class="c" data-k="valores faltantes vacios nulos missing">
+        <h3>Valores faltantes (vacíos)</h3>
+        <p>Celdas sin dato. Una columna con muchos vacíos describe a pocos registros, así que su utilidad baja aunque los datos que tenga sean variados.</p>
+        <div class="ex"><b>En CAPEC:</b> <code>Indicators</code> aparece solo en el 9 % de los patrones.</div>
+      </article>
+
+      <article class="c" data-k="cardinalidad valores distintos k">
+        <h3>Cardinalidad</h3>
+        <p>Cuántos <b>valores distintos</b> tiene una columna (en las fórmulas la llamamos <b>k</b>). Baja cardinalidad: pocas categorías. Cardinalidad igual al número de filas: cada fila es diferente.</p>
+        <div class="ex"><b>Ejemplo:</b> <code>Abstraction</code> tiene k = 3 (Meta, Standard, Detailed); <code>ID</code> tiene k = 615.</div>
+      </article>
+
+      <article class="c" data-k="identificador id clave">
+        <h3>Identificador</h3>
+        <p>Columna cuyo valor es distinto en cada fila; sirve para <b>encontrar</b> un registro, no para <b>compararlo</b> con otros. Para un modelo, un ID no enseña nada sobre el ataque.</p>
+      </article>
+
+      <article class="c" data-k="redundancia redundante duplicada">
+        <h3>Redundancia</h3>
+        <p>Cuando una columna repite información que ya está en otra. Añade trabajo sin añadir conocimiento.</p>
+      </article>
+
+      <article class="c" data-k="eda analisis exploratorio">
+        <h3>Análisis exploratorio de datos (EDA)</h3>
+        <p>La etapa en la que se “conoce” el dataset antes de modelar: qué columnas hay, cuántos vacíos, qué valores se repiten. El EIAC es una herramienta para apoyar el EDA.</p>
+      </article>
+
+      <article class="c" data-k="seleccion de caracteristicas feature selection">
+        <h3>Selección de características</h3>
+        <p>Decidir qué columnas usar. Muchas veces se hace a mano y por experiencia; proponemos una medida objetiva que ayuda a decidir.</p>
+      </article>
+
+      <article class="c" data-k="machine learning aprendizaje automatico modelo entrenamiento">
+        <h3>Machine learning y modelo</h3>
+        <p>Un <b>modelo</b> es un programa que aprende patrones a partir de ejemplos (<b>entrenamiento</b>) para luego clasificar casos nuevos, por ejemplo “tráfico normal” o “ataque”. Si recibe columnas inútiles, gasta más cómputo sin mejorar.</p>
+      </article>
+
+      <article class="c" data-k="dataset sintetico muestra">
+        <h3>Dataset sintético y muestra</h3>
+        <p>Un <b>dataset sintético</b> se fabrica a propósito para probar casos controlados (columnas vacías, IDs, ruido). Una <b>muestra</b> es una parte de un dataset grande: usamos 40.000 de 907.814 registros de SR-BH 2020.</p>
+        <span class="tag">Lámina 7</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===================== NIVEL 2 ===================== -->
+  <section class="level" id="ciber">
+    <div class="level-head"><span class="level-num">2</span><h2>Ciberseguridad</h2></div>
+    <p class="level-intro">De dónde vienen nuestros datos y qué describen.</p>
+    <div class="grid">
+
+      <article class="c" data-k="ciberseguridad ataque amenaza">
+        <h3>Ciberseguridad y ataque</h3>
+        <p>La ciberseguridad protege sistemas y datos. Un <b>ataque</b> es un intento de dañarlos, robarlos o usarlos sin permiso.</p>
+      </article>
+
+      <article class="c" data-k="patron de ataque">
+        <h3>Patrón de ataque</h3>
+        <p>Una descripción general de <b>cómo</b> se realiza un tipo de ataque: pasos, requisitos, consecuencias y cómo mitigarlo. Es como una “receta” documentada, no un incidente real.</p>
+      </article>
+
+      <article class="c" data-k="mitre organizacion">
+        <h3>MITRE</h3>
+        <p>Organización sin ánimo de lucro de EE. UU. que mantiene catálogos públicos usados en todo el mundo, como CAPEC, CWE, CVE y ATT&amp;CK.</p>
+      </article>
+
+      <article class="c wide" data-k="capec common attack pattern enumeration classification abstraction status likelihood severity meta standard detailed">
+        <h3>CAPEC</h3>
+        <p><b>Common Attack Pattern Enumeration and Classification</b>: catálogo público de MITRE con patrones de ataque. Es una base de conocimiento, no un registro de incidentes. Usamos la versión 3.9: <b>615 patrones</b>, cada uno con hasta 23 campos.</p>
+        <div class="tbl"><table>
+          <tr><th>Campo</th><th>Qué significa</th><th>Valores</th></tr>
+          <tr><td>Abstraction</td><td>Nivel de generalidad del patrón</td><td>Meta 77 · Standard 197 · Detailed 341</td></tr>
+          <tr><td>Status</td><td>Madurez del registro</td><td>Draft, Stable, Deprecated…</td></tr>
+          <tr><td>Likelihood Of Attack</td><td>Probabilidad de que se intente</td><td>High, Medium, Low</td></tr>
+          <tr><td>Typical Severity</td><td>Gravedad típica si tiene éxito</td><td>Very High … Very Low</td></tr>
+        </table></div>
+        <span class="tag">Láminas 8–9</span>
+      </article>
+
+      <article class="c" data-k="cwe cve attack att&ck relacion">
+        <h3>CWE, CVE y ATT&amp;CK</h3>
+        <p><b>CWE</b> lista debilidades de software; una <b>CVE</b> es una vulnerabilidad concreta en un producto; <b>ATT&amp;CK</b> describe técnicas de atacantes reales. CAPEC conecta con todas: un patrón explota debilidades CWE.</p>
+      </article>
+
+      <article class="c" data-k="http trafico peticion request cookie user agent puerto">
+        <h3>Tráfico HTTP</h3>
+        <p>Los mensajes entre un navegador y un sitio web. Cada <b>petición</b> (<i>request</i>) tiene partes como el cuerpo, las <i>cookies</i>, el <i>user agent</i> (qué navegador es) y el puerto de origen.</p>
+      </article>
+
+      <article class="c" data-k="sr-bh 2020 multilabel dataset trafico">
+        <h3>SR-BH 2020</h3>
+        <p>Dataset público de tráfico HTTP real etiquetado con tipos de ataque (multietiqueta, alineado con CAPEC). Fue nuestro escenario real.</p>
+        <span class="tag">Lámina 16</span>
+      </article>
+
+      <article class="c" data-k="inyeccion sql sqli">
+        <h3>Inyección SQL</h3>
+        <p>Ataque que mete instrucciones de base de datos en un campo de un formulario o URL para leer o modificar datos sin permiso. Es CAPEC-66.</p>
+      </article>
+
+      <article class="c" data-k="ids deteccion de intrusiones anomalia ddos">
+        <h3>Detección de intrusiones, anomalías y DDoS</h3>
+        <p>Un <b>IDS</b> vigila la red buscando ataques. Una <b>anomalía</b> es un comportamiento fuera de lo normal. Un <b>DDoS</b> satura un servicio con tráfico. La mayoría de estudios usa la entropía para detectar esto; nosotros la usamos para evaluar el dataset.</p>
+        <span class="tag">Lámina 6</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===================== NIVEL 3 ===================== -->
+  <section class="level" id="metodo">
+    <div class="level-head"><span class="level-num">3</span><h2>El método</h2></div>
+    <p class="level-intro">Las ideas matemáticas y metodológicas detrás del índice EIAC, paso a paso.</p>
+    <div class="grid">
+
+      <article class="c" data-k="probabilidad frecuencia relativa">
+        <h3>Probabilidad y frecuencia relativa</h3>
+        <p>La frecuencia relativa de un valor es cuántas veces aparece dividido entre el total. Funciona como su probabilidad (<b>p</b>).</p>
+        <div class="ex">Si de 100 patrones 95 son “Stable”: <span class="f">p = 95/100 = 0,95</span></div>
+      </article>
+
+      <article class="c" data-k="logaritmo base 2 bit">
+        <h3>Logaritmo en base 2 y el bit</h3>
+        <p><span class="f">log₂ x</span> responde “¿cuántas veces debo multiplicar 2 para llegar a x?”. El <b>bit</b> es la información de una pregunta de sí/no con dos opciones igual de probables.</p>
+        <div class="ex"><span class="f">log₂ 4 = 2</span> → elegir entre 4 opciones iguales equivale a 2 preguntas de sí/no.</div>
+      </article>
+
+      <article class="c wide" data-k="entropia de shannon incertidumbre diversidad">
+        <h3>Entropía de Shannon</h3>
+        <p>Mide la <b>incertidumbre o diversidad</b> de los valores de una columna (Shannon, 1948). Si casi todo es igual, hay poca sorpresa y la entropía es baja; si los valores están repartidos, es alta.</p>
+        <p class="f">H(X) = − Σ pᵢ · log₂ pᵢ</p>
+        <div class="tbl"><table>
+          <tr><th>Columna</th><th>Reparto</th><th>H</th><th>Lectura</th></tr>
+          <tr><td>Concentrada</td><td>95 % Stable, 5 % Draft</td><td>0,29 bits</td><td>Poca sorpresa</td></tr>
+          <tr><td>Equilibrada</td><td>4 categorías al 25 %</td><td>2,00 bits</td><td>Máxima para k = 4</td></tr>
+          <tr><td>Constante</td><td>100 % un solo valor</td><td>0</td><td>Sin incertidumbre</td></tr>
+          <tr><td>Identificador</td><td>Un valor distinto por fila</td><td>Máxima</td><td><b>¡Pero no es útil!</b></td></tr>
+        </table></div>
+        <p style="margin-top:8px">La última fila es el problema que resolvemos: <b>entropía alta no significa columna útil</b>.</p>
+        <span class="tag">Lámina 4</span>
+      </article>
+
+      <article class="c" data-k="entropia maxima normalizada hn">
+        <h3>Entropía normalizada (Hn)</h3>
+        <p>La entropía máxima depende del número de categorías (<span class="f">log₂ k</span>), así que no se pueden comparar columnas directamente. Dividimos y obtenemos un valor de 0 a 1:</p>
+        <p class="f">Hn(X) = H(X) / log₂ k</p>
+      </article>
+
+      <article class="c" data-k="completitud c vacios">
+        <h3>Completitud (C)</h3>
+        <p>Qué fracción de la columna tiene datos. <b>m</b> = celdas vacías, <b>n</b> = total de registros.</p>
+        <p class="f">C(X) = 1 − m / n</p>
+        <div class="ex">Una columna llena tiene C = 1; una con la mitad vacía, C = 0,5.</div>
+      </article>
+
+      <article class="c" data-k="unicidad u cardinalidad">
+        <h3>Unicidad (U)</h3>
+        <p>Qué tan cerca está la columna de tener un valor distinto en cada fila.</p>
+        <p class="f">U(X) = k / n</p>
+        <div class="ex">Un ID tiene U = 1 → el factor <span class="f">1 − U</span> vale 0 y anula el índice.</div>
+      </article>
+
+      <article class="c wide" data-k="eiac indice de entropia informativa ajustada de columna formula relevancia">
+        <h3>EIAC · Índice de Entropía Informativa Ajustada de Columna</h3>
+        <p>Nuestra propuesta. Parte de Shannon y la corrige con los dos factores que ella no ve: vacíos y unicidad.</p>
+        <p class="f" style="font-size:1.25rem">EIAC(X) = Hn(X) × C(X) × (1 − U(X))</p>
+        <div class="scale" aria-label="Escala de relevancia">
+          <div style="background:#c65a1e">Baja · 0 a &lt; 0,33</div>
+          <div style="background:#8a97a6">Media · 0,33 a &lt; 0,66</div>
+          <div style="background:#2e75b6">Alta · 0,66 a 1</div>
+        </div>
+        <div class="ex" style="margin-top:12px"><b>Ejemplo real (6 patrones, sin vacíos):</b> <code>Abstraction</code> → Hn 0,918 × C 1 × (1 − 2/6) = <b>0,612</b> (media). <code>ID</code> → Hn 1 × C 1 × (1 − 6/6) = <b>0</b>: Shannon lo ve como la columna más informativa; el EIAC lo reconoce como identificador.</div>
+        <span class="tag">Láminas 10–12</span> <a href="#calculadora">Pruébalo en la calculadora ↓</a>
+      </article>
+
+      <article class="c" data-k="clasificacion funcional analitica trazabilidad descriptiva complementaria limpieza">
+        <h3>Clasificación funcional</h3>
+        <p>Además del número, el algoritmo etiqueta el papel de cada columna: <b>analítica</b>, <b>trazabilidad</b>, <b>descriptiva</b>, <b>complementaria</b>, <b>bajo aporte</b> o <b>candidata a limpieza</b> (p. ej. “Detailed” y “detailed” escritos distinto).</p>
+      </article>
+
+      <article class="c" data-k="analisis de sensibilidad">
+        <h3>Análisis de sensibilidad</h3>
+        <p>Mover un solo factor a la vez para ver cómo cambia el resultado. Desde una columna con Hn 0,80, C 0,90 y U 0,10 (EIAC 0,648): si la completitud baja a 0,50, el EIAC cae a 0,360; si U llega a 1, se anula.</p>
+        <span class="tag">Lámina 12</span>
+      </article>
+
+      <article class="c" data-k="crisp-dm metodologia fases">
+        <h3>CRISP-DM</h3>
+        <p>Metodología estándar para proyectos de datos: entender el problema y los datos, prepararlos, modelar, evaluar y desplegar. La adaptamos en cuatro fases, una por objetivo.</p>
+        <span class="tag">Lámina 7</span>
+      </article>
+
+      <article class="c" data-k="cvm estado del arte revision literatura criterios ventana moda">
+        <h3>Modelo CVM</h3>
+        <p>Forma de organizar una revisión de literatura en tres dimensiones: <b>C</b>riterios de búsqueda, <b>V</b>entana de tiempo y <b>M</b>oda investigativa. Con él seleccionamos 14 trabajos (2018–2026).</p>
+        <span class="tag">Lámina 6</span>
+      </article>
+
+      <article class="c" data-k="python pandas implementacion algoritmo">
+        <h3>Implementación en Python</h3>
+        <p>El algoritmo lee un CSV, calcula H, Hn, C, U y EIAC por columna, las clasifica y genera reportes CSV y PDF. Usa pandas, math, re, argparse, pathlib, urllib y reportlab.</p>
+        <span class="tag">Láminas 11 y 13</span>
+      </article>
+
+      <article class="c" data-k="reproducibilidad repositorio version sha-256 huella">
+        <h3>Reproducibilidad</h3>
+        <p>Que cualquiera pueda repetir el trabajo y obtener lo mismo. Por eso el código, los datos y los resultados están en un repositorio público con una versión congelada (v1.0.0), y cada archivo de datos tiene una <b>huella SHA-256</b> que permite comprobar que no cambió.</p>
+      </article>
+
+      <article class="c wide" data-k="como leer las graficas barras dispersion diagonal resultados">
+        <h3>Cómo leer las gráficas de resultados</h3>
+        <p><b>Barras:</b> la barra gris es Shannon normalizado y la azul es el EIAC. Si la azul es mucho más corta, la columna tenía diversidad “engañosa” (vacíos o casi todo distinto). <b>Dispersión:</b> cada punto es una columna; sobre la diagonal el índice no ajusta, por debajo la columna pierde relevancia. Las caídas se explican por dos causas: <b>unicidad extrema</b> (IDs, textos, timestamps) o <b>baja completitud</b> (muchos vacíos).</p>
+        <div class="ex"><b>Caso estrella:</b> <code>timestamp</code> en SR-BH 2020 → Shannon 0,991, EIAC 0,184: casi cada fila tiene una hora distinta.</div>
+        <span class="tag">Láminas 14–17</span>
+      </article>
+
+      <article class="c" data-k="exactitud precision recall f1 metricas trabajo futuro">
+        <h3>Exactitud, precisión, recall y F1</h3>
+        <p>Métricas para evaluar un modelo de clasificación: cuántos aciertos tiene, cuántas alarmas son reales, cuántos ataques detecta y un balance de ambas. Medir su efecto con y sin EIAC es nuestro trabajo futuro.</p>
+        <span class="tag o">Lámina 19</span>
+      </article>
+    </div>
+    <p class="empty" id="empty">No encontramos ese término. Prueba con otra palabra.</p>
+  </section>
+
+  <!-- ===================== CALCULADORA ===================== -->
+  <section class="level" id="calculadora">
+    <div class="level-head"><span class="level-num">∑</span><h2>Calculadora de EIAC</h2></div>
+    <p class="level-intro">Escribe los valores de una columna separados por comas o saltos de línea. Deja un valor vacío (dos comas seguidas) para simular un dato faltante.</p>
+    <div class="calc">
+      <label for="vals" class="hidden">Valores de la columna</label>
+      <textarea id="vals" spellcheck="false">Detailed, Standard, Detailed, Detailed, Standard, Detailed</textarea>
+      <div class="presets">
+        <button class="chip" data-p="Detailed, Standard, Detailed, Detailed, Standard, Detailed">Abstraction (ejemplo)</button>
+        <button class="chip" data-p="1, 2, 3, 4, 5, 6">Identificador</button>
+        <button class="chip" data-p="Stable, Stable, Stable, Stable, Stable, Stable, Stable, Stable, Stable, Draft">Casi constante</button>
+        <button class="chip" data-p="High, Medium, Low, High, Medium, Low, High, Medium">Equilibrada</button>
+        <button class="chip" data-p="High, , , Low, , , High, , , ">Con muchos vacíos</button>
+      </div>
+      <div class="res">
+        <div><small>Registros (n)</small><strong id="r-n">–</strong></div>
+        <div><small>Vacíos (m)</small><strong id="r-m">–</strong></div>
+        <div><small>Distintos (k)</small><strong id="r-k">–</strong></div>
+        <div><small>Shannon H (bits)</small><strong id="r-h">–</strong></div>
+        <div><small>Hn</small><strong id="r-hn">–</strong></div>
+        <div><small>C</small><strong id="r-c">–</strong></div>
+        <div><small>1 − U</small><strong id="r-u">–</strong></div>
+        <div class="big"><small>EIAC</small><strong id="r-e">–</strong></div>
+      </div>
+      <p class="verdict" id="verdict"></p>
+      <div class="barwrap"><div class="bars" id="bars" aria-label="Frecuencia de cada valor"></div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Código y datos:</b> <a href="https://github.com/TFM-EIAC-UNIR/EIAC">github.com/TFM-EIAC-UNIR/EIAC</a> (v1.0.0).</p>
+    <p><b>Cómo citar:</b> Adarme Jaimes, M. A., Benítez Mejía, R. E., &amp; Hernández Lasso, J. K. (2026). <i>EIAC: Evaluación de la relevancia informativa de características en datasets basados en CAPEC</i>. https://github.com/TFM-EIAC-UNIR/EIAC</p>
+    <p>Referencias base: Shannon (1948), <i>A mathematical theory of communication</i> · The MITRE Corporation (2023), CAPEC v3.9 · Sureda Riera et al. (2022), SR-BH 2020 multi-label dataset · Li, Yang &amp; Wen (2023), <i>Entropy-based redundancy analysis and information screening</i>.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Tema claro/oscuro
+  var root=document.documentElement, btn=document.getElementById('theme');
+  try{var t=localStorage.getItem('eiac-theme'); if(t) root.setAttribute('data-theme',t);}catch(e){}
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var next=dark?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('eiac-theme',next);}catch(e){}
+  });
+
+  // Búsqueda
+  var norm=function(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');};
+  var cards=[].slice.call(document.querySelectorAll('article.c'));
+  var empty=document.getElementById('empty');
+  document.getElementById('q').addEventListener('input',function(e){
+    var q=norm(e.target.value.trim()), shown=0;
+    cards.forEach(function(c){
+      var hit=!q || norm(c.getAttribute('data-k')+' '+c.textContent).indexOf(q)>-1;
+      c.classList.toggle('hidden',!hit); if(hit) shown++;
+    });
+    empty.style.display = shown?'none':'block';
+  });
+
+  // Calculadora EIAC
+  var ta=document.getElementById('vals');
+  var fmt=function(x){return x.toLocaleString('es-CO',{minimumFractionDigits:3,maximumFractionDigits:3});};
+  function calc(){
+    var raw=ta.value.split(/[,\n;]/);
+    if(raw.length && raw[raw.length-1].trim()==='' && ta.value.trim().slice(-1)!==',') raw.pop();
+    var vals=raw.map(function(v){return v.trim();});
+    var n=vals.length, m=0, freq={};
+    vals.forEach(function(v){ if(v===''){m++;} else {freq[v]=(freq[v]||0)+1;} });
+    var keys=Object.keys(freq), k=keys.length, filled=n-m, H=0;
+    keys.forEach(function(key){var p=freq[key]/filled; H-=p*Math.log2(p);});
+    var Hn=(k>1)? H/Math.log2(k) : 0;
+    var C=n? 1-m/n : 0, U=n? k/n : 0, E=Hn*C*(1-U);
+    if(!n || !filled){H=0;Hn=0;C=n?1-m/n:0;U=0;E=0;}
+    var set=function(id,v){document.getElementById(id).textContent=v;};
+    set('r-n',n); set('r-m',m); set('r-k',k); set('r-h',fmt(H)); set('r-hn',fmt(Hn));
+    set('r-c',fmt(C)); set('r-u',fmt(1-U)); set('r-e',fmt(E));
+    var lvl=E>=0.66?'alta':(E>=0.33?'media':'baja');
+    var why='';
+    if(U>=0.9) why=' Casi cada valor es distinto: se comporta como un identificador.';
+    else if(C<0.5) why=' Más de la mitad de las celdas está vacía.';
+    else if(Hn<0.3 && k>0) why=' Un valor domina casi toda la columna.';
+    document.getElementById('verdict').textContent='Relevancia '+lvl+'.'+why;
+    var bars=document.getElementById('bars'); bars.innerHTML='';
+    var max=Math.max.apply(null,keys.map(function(x){return freq[x];}).concat([1]));
+    keys.slice(0,24).forEach(function(key){
+      var s=document.createElement('span'); s.style.height=(freq[key]/max*100)+'%';
+      s.title=key+': '+freq[key]; var em=document.createElement('em'); em.textContent=key; s.appendChild(em); bars.appendChild(s);
+    });
+  }
+  ta.addEventListener('input',calc);
+  [].forEach.call(document.querySelectorAll('[data-p]'),function(b){
+    b.addEventListener('click',function(){ta.value=b.getAttribute('data-p');calc();});
+  });
+  calc();
+})();
+</script>
+</body>
+</html>
