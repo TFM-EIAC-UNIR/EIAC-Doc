@@ -286,6 +286,34 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <p>Un <b>dataset sintético</b> se fabrica a propósito para probar casos controlados (columnas vacías, IDs, ruido). Una <b>muestra</b> es una parte de un dataset grande: usamos 40.000 de 907.814 registros de SR-BH 2020.</p>
         <span class="tag">Lámina 7</span>
       </article>
+
+      <article class="c" data-k="variable objetivo etiqueta datos etiquetados supervisado">
+        <h3>Variable objetivo y datos etiquetados</h3>
+        <p>La <b>variable objetivo</b> (o etiqueta) es la columna que un modelo intenta predecir, por ejemplo “normal” o “inyección SQL”. Un dataset está <b>etiquetado</b> cuando cada registro ya trae esa respuesta.</p>
+        <div class="ex">El EIAC <b>no necesita etiquetas</b>: evalúa las columnas antes de que exista una tarea de clasificación.</div>
+      </article>
+
+      <article class="c" data-k="dimensionalidad costo computacional muchas columnas">
+        <h3>Dimensionalidad y costo computacional</h3>
+        <p>La <b>dimensionalidad</b> es la cantidad de columnas. Más columnas significan más memoria y más tiempo de cálculo (<b>costo computacional</b>), y si no aportan información el modelo no mejora: solo se vuelve más lento y difícil de interpretar.</p>
+        <span class="tag">Lámina 3</span>
+      </article>
+
+      <article class="c" data-k="normalizacion limpieza de columnas escritura mayusculas">
+        <h3>Normalización y limpieza</h3>
+        <p><b>Normalizar</b> es poner los datos en un formato uniforme: nombres de columnas consistentes y valores escritos igual. Sin esa limpieza, “Detailed” y “detailed” se cuentan como dos categorías distintas y la entropía sube de forma artificial.</p>
+        <div class="ex">El algoritmo marca estas columnas como <b>candidatas a limpieza</b>.</div>
+      </article>
+
+      <article class="c" data-k="calidad de datos completitud unicidad consistencia exactitud gobierno de datos">
+        <h3>Calidad de datos</h3>
+        <p>Qué tan aptos son los datos para su uso. Se mide en dimensiones como <b>completitud</b> (¿faltan datos?), <b>unicidad</b> (¿se repiten o son todos distintos?), <b>consistencia</b> (¿están escritos igual?) y <b>exactitud</b> (¿son correctos?). El EIAC combina dos de ellas con la diversidad de Shannon; es una herramienta útil para el <b>gobierno de datos</b>.</p>
+      </article>
+
+      <article class="c" data-k="proteccion de datos privacidad datos personales reidentificacion">
+        <h3>Protección de datos</h3>
+        <p>Ninguno de los tres datasets contiene datos personales: CAPEC es un catálogo técnico, el sintético es artificial y de SR-BH 2020 solo se analizaron de forma agregada la variabilidad, completitud y unicidad de las columnas, sin intentar identificar usuarios ni redistribuir los datos.</p>
+      </article>
     </div>
   </section>
 
@@ -339,14 +367,39 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <span class="tag">Lámina 16</span>
       </article>
 
-      <article class="c" data-k="inyeccion sql sqli">
-        <h3>Inyección SQL</h3>
-        <p>Ataque que mete instrucciones de base de datos en un campo de un formulario o URL para leer o modificar datos sin permiso. Es CAPEC-66.</p>
+      <article class="c" data-k="inyeccion sql sqli xss cross-site scripting path traversal command injection ataques web">
+        <h3>Ataques web: SQLi, Path Traversal, comandos y XSS</h3>
+        <p><b>Inyección SQL</b> (CAPEC-66): mete instrucciones de base de datos en un formulario o URL. <b>Path Traversal</b> (CAPEC-126): usa rutas como <code>../</code> para leer archivos que no debería. <b>Inyección de comandos</b> (CAPEC-88): ejecuta órdenes del sistema operativo en el servidor. Estos tres están entre las 13 etiquetas de ataque de SR-BH 2020. <b>XSS</b> (Cross-Site Scripting), que inserta código que se ejecuta en el navegador de otra persona, aparece en el ejemplo de cálculo con 6 patrones.</p>
       </article>
 
       <article class="c" data-k="ids deteccion de intrusiones anomalia ddos">
         <h3>Detección de intrusiones, anomalías y DDoS</h3>
         <p>Un <b>IDS</b> vigila la red buscando ataques. Una <b>anomalía</b> es un comportamiento fuera de lo normal. Un <b>DDoS</b> satura un servicio con tráfico. La mayoría de estudios usa la entropía para detectar esto; nosotros la usamos para evaluar el dataset.</p>
+        <span class="tag">Lámina 6</span>
+      </article>
+
+      <article class="c" data-k="xml jerarquico campos moleculares anidados attack_pattern elementos hijo">
+        <h3>Estructura del XML y campos “moleculares”</h3>
+        <p>En el XML, cada <code>&lt;Attack_Pattern&gt;</code> contiene elementos hijo, y algunos tienen a su vez listas dentro (relaciones, referencias, pasos). A esos campos con registros anidados los llamamos <b>moleculares</b>: no caben en una sola celda sin transformarlos, por eso se dejaron fuera del dataset modelo.</p>
+        <span class="tag">Láminas 8–9</span>
+      </article>
+
+      <article class="c" data-k="cobertura campo porcentaje patrones">
+        <h3>Cobertura de un campo</h3>
+        <p>En cuántos de los 615 patrones aparece un campo del catálogo. Es la mirada “antes” de construir el dataset; la <b>completitud C</b> es la misma idea medida ya sobre cada columna del CSV.</p>
+        <div class="ex"><code>Related Attack Patterns</code> aparece en 506 de 615 patrones: <b>82 %</b>. <code>Notes</code>, solo en el 3 %.</div>
+        <span class="tag">Lámina 8</span>
+      </article>
+
+      <article class="c" data-k="prerequisites mitigations execution flow related weaknesses campos capec">
+        <h3>Otros campos de CAPEC</h3>
+        <p><b>Prerequisites:</b> condiciones necesarias para que el ataque sea viable. <b>Mitigations:</b> controles para prevenirlo o neutralizarlo. <b>Execution Flow:</b> los pasos del ataque (explorar, experimentar, explotar). <b>Related Weaknesses:</b> las debilidades CWE que explota.</p>
+        <div class="ex">Son valiosos, pero son listas o textos largos: necesitarían NLP u otras transformaciones para analizarse como columnas.</div>
+      </article>
+
+      <article class="c" data-k="entropia ciberseguridad unsw-nb15 sdn iot cti inteligencia de amenazas">
+        <h3>Dónde se usa hoy la entropía en ciberseguridad</h3>
+        <p>En la literatura revisada aparece sobre todo para <b>detectar</b>: anomalías en el tráfico del dataset <b>UNSW-NB15</b>, ataques DDoS en redes <b>SDN</b> (definidas por software), ataques en redes <b>IoT</b> (dispositivos conectados) o amenazas en textos de <b>CTI</b> (inteligencia de amenazas). Casi nunca se usa para evaluar el dataset mismo.</p>
         <span class="tag">Lámina 6</span>
       </article>
     </div>
@@ -463,6 +516,30 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);f
         <h3>Exactitud, precisión, recall y F1</h3>
         <p>Métricas para evaluar un modelo de clasificación: cuántos aciertos tiene, cuántas alarmas son reales, cuántos ataques detecta y un balance de ambas. Medir su efecto con y sin EIAC es nuestro trabajo futuro.</p>
         <span class="tag o">Lámina 19</span>
+      </article>
+
+      <article class="c" data-k="renyi tsallis informacion mutua alternativas shannon por que">
+        <h3>Alternativas a Shannon: Rényi, Tsallis e información mutua</h3>
+        <p><b>Rényi</b> y <b>Tsallis</b> son generalizaciones de la entropía con un parámetro que da más peso a los valores frecuentes o a los raros. La <b>información mutua</b> mide cuánto dice una columna sobre otra, normalmente sobre la etiqueta.</p>
+        <div class="ex"><b>¿Por qué Shannon?</b> Es la más interpretable y usada en ciberseguridad, no necesita datos etiquetados (la información mutua sí) y su costo es mucho menor que entrenar un modelo para medir relevancia.</div>
+        <span class="tag">Lámina 10</span>
+      </article>
+
+      <article class="c" data-k="divergencia kl kullback topic modeling nlp ontologias estado del arte">
+        <h3>Métodos del estado del arte</h3>
+        <p><b>Divergencia KL:</b> mide cuánto se diferencian dos distribuciones. <b>Topic modeling:</b> descubre temas en colecciones de textos. <b>NLP</b> (procesamiento de lenguaje natural): técnicas para que un programa analice texto, por ejemplo para vincular vulnerabilidades CVE con patrones CAPEC. <b>Ontologías:</b> mapas formales de conceptos y sus relaciones, usados para clasificar ataques.</p>
+        <span class="tag">Lámina 6</span>
+      </article>
+
+      <article class="c" data-k="validacion significancia estadistica limitaciones">
+        <h3>Validación y significancia estadística</h3>
+        <p><b>Validar</b> es comprobar que el índice sirve para algo externo, por ejemplo que mejora un modelo. La <b>significancia estadística</b> indica si una diferencia es real o podría ser casualidad. En este trabajo las comparaciones son descriptivas: ambas cosas quedan como trabajo futuro.</p>
+        <span class="tag o">Lámina 19</span>
+      </article>
+
+      <article class="c" data-k="entropia vida diaria contrasenas compresion malware cifrado">
+        <h3>La entropía en la vida diaria</h3>
+        <p><b>Contraseñas:</b> su fortaleza se mide en bits de entropía; más caracteres posibles y más largo, más difícil de adivinar. <b>Compresión:</b> un archivo con mucha repetición (baja entropía) se comprime mucho; uno ya comprimido o cifrado casi nada. <b>Malware:</b> el código cifrado u ofuscado tiene entropía muy alta, una pista que usan los antivirus.</p>
       </article>
     </div>
   </section>
